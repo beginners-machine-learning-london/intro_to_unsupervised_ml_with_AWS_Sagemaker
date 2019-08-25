@@ -85,7 +85,7 @@ The dataset for this workshop can be obtained via Kaggle. However, a static copy
 
 ## Collaboration, Questions and Discussions
 
-- [**BML Slack Channel**](https://join.slack.com/t/beginnersmach-wlf5812/shared_invite/enQtNzAzODA4OTY3MTcyLWU2ZDMzNGU2YTQ4ZDk5ZjY3OTk1YWU2OGU5NWRmMjM1NzkwM2MwYjk5MDNhZWE1YWVmNzY1MjgzZDk4OGE1OGE) - Join our slack workspace to collaborate with others, discuss ideas and post any questions you have about our group or the workshops
+- [**BML Slack Channel**](http://tiny.cc/bmlslack) - Join our slack workspace to collaborate with others, discuss ideas and post any questions you have about our group or the workshops
 - Have questions about workshop exercises or setting up your AWS account and configurations? Post them [**here**](https://app.slack.com/client/TLQ81UB7A/CLHTZDGGZ)
 
 ## Workshop Feedback
