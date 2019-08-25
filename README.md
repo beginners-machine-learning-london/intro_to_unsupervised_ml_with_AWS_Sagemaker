@@ -6,7 +6,7 @@ You will then take your trained model, deserialise it, convert its output to a c
 
 ## Questions you will answer in this workshop
 
-- What areas of the country are most likely to have UFO sightings?
+- What areas of the world are most likely to have UFO sightings?
 - Do clusters of UFO sightings correlate with landmarks, such as airports or research centers?
 
 This repository contains instructions for setting up your AWS account to get you started with Amazon Sagemaker, S3 and Quicksight. Workshop assignments for are included in the `exercises` folder.
