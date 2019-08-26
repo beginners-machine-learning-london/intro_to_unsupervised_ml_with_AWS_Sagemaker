@@ -13212,11 +13212,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Construct the url path to your dataset file that you have just uploaded to your newly created S3 bucket</span>
-<span class="n">bucket</span> <span class="o">=</span> <span class="s2">&quot;YOUR-OWN-BUCKET-NAME&quot;</span>
+<span class="n">bucket</span> <span class="o">=</span> <span class="s2">&quot;YOUR_OWN_UNIQUE_BUCKET_NAME&quot;</span>
 <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;ufo_dataset&quot;</span>
 <span class="n">data_key</span> <span class="o">=</span> <span class="s2">&quot;ufo_complete.csv&quot;</span>
 
@@ -13241,7 +13241,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>s3://YOUR-OWN-BUCKET-NAME/ufo_dataset/ufo_complete.csv
+<pre>s3://YOUR_OWN_UNIQUE_BUCKET_NAME/ufo_dataset/ufo_complete.csv
 </pre>
 </div>
 </div>
@@ -13255,8 +13255,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Internally do not process the file in chunks when loading the csv onto </span>
-<span class="c1"># a dataframe to ensure avoid mixed type inferences when importing the large UFO dataset. </span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Internally do not process the file in chunks when loading the csv onto a dataframe </span>
+<span class="c1"># to ensure avoid mixed type inferences when importing the large UFO dataset. </span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_location</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
@@ -13583,10 +13583,10 @@ memory usage: 1.4+ MB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Upon successfull inspection of the above dataframe, you should note the following with this dataframe:</p>
 <ul>
-<li>There are no <code>null</code> or missing values in both columns. However, we still need to check for other incorrect entries that are not <strong>coordinates</strong>. Example: <code>0</code>, <code>string</code>s, etc.</li>
-<li>The <code>latitude</code> column has a <code>dtype</code> of <code>object</code>. This means the column may have missing or string values where the rest of the values are numbers. If the entries in the column are non-homogenous, pandas will store the column as a <code>string</code> or <code>object</code> data type. To clean the data in this column we can use pandas' <code>.to_numeric()</code> method to convert the data in this column to <code>float</code> for processing. The machine learning algorithm expects data passed in to it to be numerical digits <code>float</code>s or <code>int</code>s not <code>string</code>s. - See <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_numeric.html">Documentation</a> on how to use this method.</li>
+<li>There are no <code>null</code> or missing values in both columns. However, we still need to check for other incorrect entries that are not <strong>coordinates</strong>. Examples include: <code>0</code>, <code>string</code>s, etc.</li>
+<li>The <code>latitude</code> column has a <code>dtype</code> of <code>object</code>. This means the column may have missing or string values where the rest of the values are numbers. If the entries in the column are non-homogenous, pandas will store the column as a <code>string</code> or <code>object</code> data type. To clean the data in this column we can use pandas' <code>pd.to_numeric()</code> method to convert the data in this column to <code>float</code> for processing. The machine learning algorithm expects the data passed in to it to be numerical digits <code>float</code>s or <code>int</code>s not <code>string</code>s. - See <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_numeric.html">Documentation</a> on how to use this method.</li>
 </ul>
-<blockquote><p><strong>Exercise:</strong> Convert the <code>latitude</code> column datatype to <code>float</code>. You can pass in the <code>errors = "coerce"</code> option to <code>.to_numeric()</code> method to enforce the conversion. When conversion is not possible - i.e. values are strings - these strings will be replaced with NaNs. Therefore, chain a <code>.dropna()</code> method to drop rows where <code>NaNs</code> exist. Then check whether the column formats have been converted to numerical data types <code>float</code> and if any missing values are still present. Finally, pass in the <code>inplace = True</code> argument to both <code>.dropna()</code> and <code>.to_numeric()</code> methods so that operations are performed in place and to avoid re-assignments.</p>
+<blockquote><p><strong>Exercise:</strong> Convert the <code>latitude</code> column's datatype to <code>float</code>. You can pass in the <code>errors = "coerce"</code> option to <code>pd.to_numeric()</code> method to enforce the conversion. When conversion is not possible - i.e. values are <code>string</code>s - these strings will be replaced with <code>NaNs</code>. Therefore, you need to use a <code>.dropna()</code> method to drop rows where <code>NaNs</code> exist. Then check whether the column formats have been converted to numerical data types <code>float</code> and if any missing values are still present. <strong>Note</strong>: You can pass in <code>inplace = True</code> argument to <code>.dropna()</code> methods so that operations are performed in place and to avoid re-assignments.</p>
 </blockquote>
 
 </div>
@@ -13597,9 +13597,7 @@ memory usage: 1.4+ MB
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Convert the column values to numeric and whenever it is not possible replace the value with NaNs and then drop rows</span>
-<span class="c1"># where NaNs exist</span>
-
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Convert the column values to numeric and whenever this is not possible replace the value with NaNs</span>
 <span class="n">df_geo</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
 </pre></div>
 
@@ -13613,7 +13611,7 @@ memory usage: 1.4+ MB
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count the number of null values in the dataframe - Expecting this to be zero</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count the number of null values in the dataframe - Expecting this to be non-zero</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of null values in the dataframe before dropping rows is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
 
 <span class="c1"># Drop all rows that NaN Values</span>
@@ -13652,7 +13650,7 @@ Number of null values in the dataframe before dropping rows is 0
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count how many rows in the df are have 0 values</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count how many rows in the df have 0 values</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df_geo</span><span class="p">[(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">longitude</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">latitude</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
 </pre></div>
 
@@ -13686,7 +13684,7 @@ dtype: int64
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select all coordinate values that are non-zero</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select all rows that have non-zero coordinate values and re-assign the selection to df_geo</span>
 <span class="n">df_geo</span> <span class="o">=</span> <span class="n">df_geo</span><span class="p">[(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">longitude</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">df_geo</span><span class="o">.</span><span class="n">latitude</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">]</span>
 </pre></div>
 
@@ -13873,14 +13871,14 @@ memory usage: 2.0 MB
 <ul>
 <li><strong>plotly</strong>'s <a href="https://plot.ly/python/plotly-express/">express</a> - Plotly Express is a terse, consistent, high-level wrapper around <code>plotly.graph_objects</code> for rapid data exploration and figure generation.</li>
 </ul>
-<p>For data available as a tidy pandas DataFrame, we can use the Plotly Express function <code>px.scatter_geo</code> for a geographical scatter plot. The <code>color</code> argument is used to set the size of markers from a given column of the DataFrame.</p>
+<p>For data available as a tidy pandas DataFrame, we can use the Plotly Express function <code>px.scatter_geo</code> for a geographical scatter plot. The <code>color</code> argument is used to set the color of the markers from a given column of the DataFrame.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
@@ -13907,7 +13905,7 @@ memory usage: 2.0 MB
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You may notice that most of the past 5000 UFO reports have been located in the United States. Let's take a closer look at United States by using <code>plotly</code>'s <code>geo</code> layout feature to show sightings on the US map.</p>
+<p>You may notice that most of the recent 5000 UFO reports have been located in the United States. Let's take a closer look at United States by using <code>plotly</code>'s <code>geo</code> layout feature to show sightings on the US map.</p>
 
 </div>
 </div>
@@ -13989,7 +13987,7 @@ memory usage: 2.0 MB
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To pass a model training command to Amazon for training, we need to grab the details of the current execution role <strong>ARN ID</strong> whose credentials we are using to call the Sagemaker API.</p>
+<p>To pass a training command to Amazon Sagemaker, we need to grab the details of the current execution role <strong>ARN ID</strong> whose credentials we are using to call the Sagemaker API.</p>
 <blockquote><p><strong>Exercise:</strong> Grab the ARN ID of your current Execution role using the <code>sagemaker</code> SDK - See <a href="https://sagemaker.readthedocs.io/en/stable/session.html?highlight=get%20execution#sagemaker.session.get_execution_role">Documentation</a></p>
 </blockquote>
 
@@ -14018,13 +14016,13 @@ memory usage: 2.0 MB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We now can use Amazon's built-in K-means ML algorithm to find <code>k</code> clusters of data in our unlabeled UFO dataset.</p>
 <p>Amazon SageMaker uses a modified version of the web-scale k-means clustering algorithm. Compared with the original version of the algorithm, the version used by Amazon SageMaker is more accurate. Like the original algorithm, it scales to massive datasets and delivers improvements in training time. To do this, the version used by Amazon SageMaker streams mini-batches (small, random subsets) of the training data. The k-means algorithm expects tabular data, where rows represent the observations that you want to cluster, and the columns represent attributes of the observations. See <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/k-means.html">Documentation</a></p>
-<p>To ask AWS sagemaker for training a model using this algorithm we need to define a <strong>K-means Estimator</strong>. KMeans Estimators can be configured by setting <strong>hyperparameters</strong> which are arguments passed into the Estimator Constructor Function.</p>
+<p>To ask AWS sagemaker for training a model using this algorithm we need to define a <strong>K-means Estimator</strong>. KMeans estimators can be configured by setting <strong>hyperparameters</strong>. These hyperparameters are arguments passed into the estimator's Constructor Function.</p>
 <p>This estimator requires the following hyperparameters to be passed in <code>sagemaker.KMeans()</code>:</p>
 <ul>
-<li><code>role</code> (str) – An AWS IAM role (either name or full ARN). The Amazon SageMaker training jobs and APIs that create Amazon SageMaker endpoints use this role to access training data and model artifacts. After the endpoint is created, the inference code might use the IAM role, if accessing AWS resource.</li>
-<li><code>train_instance_count</code> (int) – Number of Amazon EC2 instances to use for training.</li>
+<li><code>role</code> (str) – An AWS IAM role (either name or full ARN)</li>
+<li><code>train_instance_count</code> (int) – Number of Amazon EC2 instances to use for training. We only need 1 for this exercise.</li>
 <li><code>train_instance_type</code> (str) – Type of EC2 instance to use for training, for example, ‘ml.c4.xlarge’. This is the <strong>compute resources</strong> that you want Amazon SageMaker to use for model training. Compute resources are ML compute instances that are managed by Amazon SageMaker.</li>
-<li><code>k</code> (int) – The number of clusters to produce.</li>
+<li><code>k</code> (int) – The number of clusters to produce. We need to 10 for this exercise.</li>
 <li><code>output_path</code> (str) - The URL of the S3 bucket where you want to store the output of the job.</li>
 </ul>
 
@@ -14052,7 +14050,7 @@ memory usage: 2.0 MB
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The following diagram shows how you train and deploy a model with Amazon SageMakern - See <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-training.html">Documentation</a></p>
+<p>The following diagram shows how you train and deploy a model with Amazon SageMakern - See <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/how-it-works-training.html">Documentation</a> For this assignment, Amazon SageMaker provides training algorithms that are great out-of-the-box solution for quick model training.  We have used some helper code above to clean and prepare the dataset and configure AWS Sagemaker API calls but do not need to specify training code or even a training code image from EC2 Container Registry. We only need to pass in the dataset for training with AWS's KMeans default algorithm. If we wanted to specify our own algorithms or use one of the popular deep learning frameworks - tensorflow/etc. - then we provide additional training code.</p>
 <p><img src="https://docs.aws.amazon.com/sagemaker/latest/dg/images/sagemaker-architecture-training-2.png"></p>
 <p>To train a model in Amazon SageMaker, you create a <strong>training job</strong> using the <code>kmeans.fit()</code> method. - See <a href="https://sagemaker.readthedocs.io/en/stable/kmeans.html?highlight=kmeans.fit#sagemaker.KMeans.fit">Documentation</a></p>
 <p>The training job requires the following information passed in to <code>.fit()</code> method:</p>
@@ -14060,8 +14058,8 @@ memory usage: 2.0 MB
 <li><code>record_set(data_train)</code> (str) - The training records to train the KMeans Estimator on. Here <code>data_train</code> must be passed in to the <code>kmeans.record_set()</code> method to convert our 2D numpy array data to a <code>RecordSet</code> object that is required by the algorithm. - See <a href="https://sagemaker.readthedocs.io/en/stable/sagemaker.amazon.amazon_estimator.html?highlight=record_set(">Documentation</a>#sagemaker.amazon.amazon_estimator.AmazonAlgorithmEstimatorBase.record_set)</li>
 <li><code>job_name</code> (str) - Training job name. If not specified, the estimator generates a default job name, based on the training image name and current timestamp.</li>
 </ul>
-<p>Amazon SageMaker then launches the ML compute instances and uses the training code and the training dataset to train the model. It saves the resulting model artifacts and other output in the S3 bucket you specified for that purpose.</p>
-<p>Here we are going to construct a job name using the following expression and Python's built-in <code>datetime</code> module. This ensures our <code>job_name</code> is unique even if the code cell below is run multiple times. Each training job requires a <strong>unique</strong> <code>job_name</code>. Otherwise, AWS will throw an error.</p>
+<p>Amazon SageMaker then launches the ML compute instances and uses the training dataset to train the model. It saves the resulting model artifacts and other output in the S3 bucket you specified for that purpose.</p>
+<p>Here we are going to construct a job name using the following expression and Python's built-in <code>datetime</code> module. This ensures our <code>job_name</code> is unique. Each training job requires a <strong>unique</strong> <code>job_name</code>. Otherwise, AWS will throw an error.</p>
 
 </div>
 </div>
@@ -14250,7 +14248,7 @@ Wall time: 3min 13s
 <ul>
 <li><strong>Boto</strong> is the Amazon Web Services (AWS) SDK for Python. It enables Python developers to create, configure, and manage AWS services, such as EC2 and S3. Boto provides an easy to use, object-oriented API, as well as low-level access to AWS service. See <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">Documentation</a></li>
 </ul>
-<blockquote><p><strong>Exercise</strong>: Import <code>boto</code> package, then use the AWS Python SDK boto3 to download the compressed model output from the S3 bucket to a file. You will need to construct a url to the model output and save it to <code>path_to_model</code> variable. Then pass <code>path_to_model</code> to the following command <code>boto3.resource("s3").Bucket(bucket).download_file(path_to_model, file_name_to_save_to)</code>. - See <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html?highlight=s3.object#S3.Client.download_file">boto3 Documentation</a></p>
+<blockquote><p><strong>Exercise</strong>: Import <code>boto3</code> package, then use the AWS Python SDK boto3 to download the compressed model from the S3 bucket to a file. You will need to construct a url to the model and save it to <code>path_to_model</code> variable. Then pass <code>path_to_model</code> to the following command <code>boto3.resource("s3").Bucket(bucket).download_file(path_to_model, file_name_to_save_to)</code>. - See <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html?highlight=s3.object#S3.Client.download_file">boto3 Documentation</a></p>
 </blockquote>
 
 </div>
@@ -14258,14 +14256,13 @@ Wall time: 3min 13s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Import the required packages for deserialisation</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Import boto3</span>
 <span class="kn">import</span> <span class="nn">boto3</span>
 
-<span class="c1"># Construct a url to the model output. Compressed model outputs are saved </span>
-<span class="c1"># in the job_name folder under the model-artifacts folder</span>
+<span class="c1"># Construct a url to the model. Compressed model is saved under the model-artifacts folder</span>
 <span class="n">path_to_model</span> <span class="o">=</span> <span class="s2">&quot;model-artifacts/&quot;</span> <span class="o">+</span> <span class="n">job_name</span> <span class="o">+</span> <span class="s2">&quot;/output/model.tar.gz&quot;</span>
 
 <span class="c1"># TODO: Use the AWS Python SDK boto3 to download the compressed model output from S3 bucket onto `model.tar.gz` file.</span>
@@ -14284,12 +14281,12 @@ Wall time: 3min 13s
 <ul>
 <li><strong>Python's Built-in module</strong> <code>os</code> - See <a href="https://docs.python.org/2/library/os.html#os.system">Documentation</a></li>
 </ul>
-<p>Python's built-in system module <code>os.system()</code> can be used to execute a shell command <code>tar -zxvf</code> on the <code>model.tar.gz</code> compressed gzipped file. The <code>-zxvf</code> flags can passed in to <code>os.system()</code> to perform the following commands:</p>
+<p>Python's built-in system module <code>os.system()</code> can be used to execute a shell command <code>tar -zxvf</code> on the <code>model.tar.gz</code> compressed gzipped file. This command shell helps to extract tar files out a <code>tar.gz</code> archives. The <code>-zxvf</code> flags can passed in to <code>os.system()</code> to perform the following commands:</p>
 <ul>
-<li><code>-z</code> - filters the archive through gzip</li>
-<li><code>-x</code> - extracts files from the archive</li>
-<li><code>-v</code> - verbosely lists files processed</li>
-<li><code>-f</code> - uses archive files</li>
+<li><code>-z</code> - The file is a “gzipped” file</li>
+<li><code>-x</code> - Extract files</li>
+<li><code>-v</code> - Verbose, print the file names as they are extracted one by one</li>
+<li><code>-f</code> - Use the following tar archive for the operation</li>
 </ul>
 <p>See <a href="https://linux.die.net/man/1/tar">Linux's tar Man Pages</a> for more details on the <code>tar</code> shell command.</p>
 <blockquote><p><strong>Exercise:</strong> Use <code>os.system()</code> method to run the <code>tar</code> command on the compressed gzip file <code>model.tar.gz</code> with the above flags.</p>
@@ -14300,7 +14297,7 @@ Wall time: 3min 13s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Import the required packages for deserialisation</span>
@@ -14320,7 +14317,7 @@ Wall time: 3min 13s
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[24]:</div>
+    <div class="prompt output_prompt">Out[19]:</div>
 
 
 
@@ -14347,7 +14344,7 @@ Wall time: 3min 13s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Use Python&#39;s built-in os package to unzip model_algo-1 file. </span>
@@ -14364,7 +14361,7 @@ Wall time: 3min 13s
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[25]:</div>
+    <div class="prompt output_prompt">Out[20]:</div>
 
 
 
@@ -14391,7 +14388,7 @@ Wall time: 3min 13s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Install mxnet package</span>
@@ -14412,24 +14409,14 @@ Wall time: 3min 13s
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Collecting mxnet
-  Downloading https://files.pythonhosted.org/packages/50/08/186a7d67998f1e38d6d853c71c149820983c547804348f06727f552df20d/mxnet-1.5.0-py2.py3-none-manylinux1_x86_64.whl (25.4MB)
-    100% |████████████████████████████████| 25.4MB 1.9MB/s eta 0:00:01
+<pre>Requirement already satisfied: mxnet in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (1.5.0)
+Requirement already satisfied: graphviz&lt;0.9.0,&gt;=0.8.1 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from mxnet) (0.8.4)
 Requirement already satisfied: requests&lt;3,&gt;=2.20.0 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from mxnet) (2.20.0)
-Collecting numpy&lt;2.0.0,&gt;1.16.0 (from mxnet)
-  Downloading https://files.pythonhosted.org/packages/19/b9/bda9781f0a74b90ebd2e046fde1196182900bd4a8e1ea503d3ffebc50e7c/numpy-1.17.0-cp36-cp36m-manylinux1_x86_64.whl (20.4MB)
-    100% |████████████████████████████████| 20.4MB 3.1MB/s eta 0:00:01
-Collecting graphviz&lt;0.9.0,&gt;=0.8.1 (from mxnet)
-  Downloading https://files.pythonhosted.org/packages/53/39/4ab213673844e0c004bed8a0781a0721a3f6bb23eb8854ee75c236428892/graphviz-0.8.4-py2.py3-none-any.whl
-Requirement already satisfied: urllib3&lt;1.25,&gt;=1.21.1 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (1.23)
-Requirement already satisfied: idna&lt;2.8,&gt;=2.5 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (2.6)
+Requirement already satisfied: numpy&lt;2.0.0,&gt;1.16.0 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from mxnet) (1.17.0)
 Requirement already satisfied: chardet&lt;3.1.0,&gt;=3.0.2 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (3.0.4)
 Requirement already satisfied: certifi&gt;=2017.4.17 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (2019.6.16)
-Installing collected packages: numpy, graphviz, mxnet
-  Found existing installation: numpy 1.14.3
-    Uninstalling numpy-1.14.3:
-      Successfully uninstalled numpy-1.14.3
-Successfully installed graphviz-0.8.4 mxnet-1.5.0 numpy-1.17.0
+Requirement already satisfied: idna&lt;2.8,&gt;=2.5 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (2.6)
+Requirement already satisfied: urllib3&lt;1.25,&gt;=1.21.1 in /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages (from requests&lt;3,&gt;=2.20.0-&gt;mxnet) (1.23)
 <span class="ansi-yellow-fg">You are using pip version 10.0.1, however version 19.2.2 is available.
 You should consider upgrading via the &#39;pip install --upgrade pip&#39; command.</span>
 </pre>
@@ -14455,7 +14442,7 @@ You should consider upgrading via the &#39;pip install --upgrade pip&#39; comman
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Import mxnet</span>
@@ -14473,7 +14460,7 @@ You should consider upgrading via the &#39;pip install --upgrade pip&#39; comman
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p><strong>Exercise</strong>: Convert the model parameters to a dataframe cluster_centroids_kmeans using <code>pd.DataFrame()</code>. You can grab the model output parameters using <code>Kmeans_model_params[0].asnumpy()</code> to pass to <code>pd.DataFrame()</code>.</p>
+<blockquote><p><strong>Exercise</strong>: Convert the model parameters to a dataframe called <code>cluster_centroids_kmeans</code> using <code>pd.DataFrame()</code>. You can grab the model output parameters using <code>Kmeans_model_params[0].asnumpy()</code> to pass to <code>pd.DataFrame()</code>.</p>
 </blockquote>
 
 </div>
@@ -14481,7 +14468,7 @@ You should consider upgrading via the &#39;pip install --upgrade pip&#39; comman
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Convert the Kmeans_model_params to a dataframe using pandas and numpy: cluster_centroids_kmeans</span>
@@ -14553,11 +14540,11 @@ You should consider upgrading via the &#39;pip install --upgrade pip&#39; comman
 <span class="c1"># TODO: Use pandas .to_csv() method to weite the cluster_centroids_kmeans dataframe to a csv file</span>
 <span class="n">cluster_centroids_kmeans</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_buffer</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># TODO: Use Amazon&#39;s boto3 package to create an S3 resource</span>
+<span class="c1"># TODO: Let&#39;s use Amazon S3</span>
 <span class="n">s3_resource</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>
 
-<span class="c1"># Create an S3 object at a path given, using the .Object() method in the given `bucket`.</span>
-<span class="c1"># Then save the content of the csv_buffer file onto the newly created S3 object using the .put() methods</span>
+<span class="c1"># Use the .Object() method to upload an object in the given `bucket`</span>
+<span class="c1"># Save the content of the csv_buffer file using the .put() method</span>
 <span class="n">s3_resource</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="s2">&quot;results/ten_locations_kmeans.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Body</span> <span class="o">=</span> <span class="n">csv_buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
 </pre></div>
 
@@ -14599,10 +14586,122 @@ You should consider upgrading via the &#39;pip install --upgrade pip&#39; comman
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="CONGRATULATIONS!!!">CONGRATULATIONS!!!<a class="anchor-link" href="#CONGRATULATIONS!!!">&#182;</a></h2><p>Well done on compeleting this difficult part of the assignment. All is now left for you to do is to visualise the model outputs you have saved in the <code>ten_locations_kmeans.csv</code> file in your S3 bucket on a map. Simply create a <strong>AWS Quicksight</strong> account and use the <code>my-manifest.json</code> file under the <code>quicksight</code> folder to configure AWS Quicksight.</p>
-<p>Again, Well done on compeleting the above assignments! This was a hard exercise and you have learned a lot about how to use AWS Sagemaker to train an unsupervised machine learning model in the cloud. We hope that you enjoyed this <strong>Introduction to unsupervised machine learning with AWS</strong> Workshop. To learn more about AWS Sagemaker and machine learning in the cloud check out a few resources we have provided in our repo's <a href="https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker">README.md</a>.</p>
-<p>Also make sure to sign up on our meetup group to be informed of future workshops! <a href="https://www.meetup.com/beginners-machine-learning-london/">London Beginners Machine Learnign Meetup</a>.</p>
-<p>And join our <a href="https://join.slack.com/t/beginnersmach-wlf5812/shared_invite/enQtNzAzODA4OTY3MTcyLWU2ZDMzNGU2YTQ4ZDk5ZjY3OTk1YWU2OGU5NWRmMjM1NzkwM2MwYjk5MDNhZWE1YWVmNzY1MjgzZDk4OGE1OGE">slack channel</a> too to ask questions, discuss ML with other BML community members and suggest us topics for future workshops.</p>
+<p>Let's quickly visualise where these top 10 coordinates are! We will use <strong>AWS Quicksights</strong> later on to for reporting these locations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Visualise the top 10 locations in the world most likely to have UFO Sightings</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter_geo</span><span class="p">(</span><span class="n">cluster_centroids_kmeans</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span> 
+                     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Top 10 Locations in the world mostly likely to have UFO Sightings&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://i.imgur.com/LHRIP1L.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Visualise the top locations in the US most likely to have UFO Sightings</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;scattergeo&#39;</span><span class="p">,</span>
+        <span class="n">locationmode</span> <span class="o">=</span> <span class="s1">&#39;USA-states&#39;</span><span class="p">,</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">cluster_centroids_kmeans</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">cluster_centroids_kmeans</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="mf">5.5</span><span class="p">,</span>
+            <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.75</span><span class="p">,</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;rgb(0, 163, 81)&#39;</span><span class="p">,</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;rgb(255, 255, 255)&#39;</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="p">)]</span>
+
+<span class="n">layout</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Top locations in the United States most likely to have UFO Sightings&#39;</span><span class="p">,</span>
+         <span class="n">geo</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+             <span class="n">scope</span> <span class="o">=</span> <span class="s1">&#39;usa&#39;</span><span class="p">,</span>
+             <span class="n">projection</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;albers usa&#39;</span><span class="p">),</span>
+             <span class="n">showland</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">landcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(250, 250, 250)&#39;</span><span class="p">,</span>
+             <span class="n">subunitwidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="n">subunitcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(217, 217, 217)&#39;</span><span class="p">,</span>
+             <span class="n">countrywidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="n">countrycolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(217, 217, 217)&#39;</span><span class="p">,</span>
+             <span class="n">showlakes</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">lakecolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(255, 255, 255)&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="n">layout</span><span class="p">)</span>
+<span class="n">iplot</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://i.imgur.com/dJakSLk.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Interesting findings! Now answer the following questions:</p>
+<ul>
+<li>Which cities are the closest to these top 10 locations?</li>
+<li>Which states in the United States are these top coordinates located in?</li>
+<li>What landmarks - airports, research centres, etc. - do these coordinates correlate with?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Your answers here</span>
+<span class="n">cities</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">]</span>
+<span class="n">us_states</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">]</span>
+<span class="n">landmarks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="s2">&quot;___&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="CONGRATULATIONS!!!">CONGRATULATIONS!!!<a class="anchor-link" href="#CONGRATULATIONS!!!">&#182;</a></h2><p>Well done on completing this difficult part of the assignment. All is now left for you to do is to visualise the model outputs you have saved in the <code>ten_locations_kmeans.csv</code> file in your S3 bucket on a map. Simply create an <strong>AWS Quicksight</strong> account and use the <code>my-manifest.json</code> file under the <code>quicksight</code> folder of <a href="https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker/tree/master/exercises/quicksight">BML github repo</a> to configure AWS Quicksight.</p>
+<p>Again, Well done on completing the above assignments! This was a hard exercise. You have learned how to use AWS Sagemaker to train an unsupervised machine learning model in the cloud. We hope that you enjoyed this <strong>Introduction to unsupervised machine learning with AWS</strong> Workshop. To learn more about AWS Sagemaker and machine learning in the cloud check out a few resources we have provided in our repo's <a href="https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker">README.md</a>.</p>
+<p>Also make sure to join our meetup group to be informed of future workshops! <a href="https://www.meetup.com/beginners-machine-learning-london/">London Beginners Machine Learning Meetup</a>.</p>
+<p>And join our <a href="https://join.slack.com/t/beginnersmach-wlf5812/shared_invite/enQtNzAzODA4OTY3MTcyLWU2ZDMzNGU2YTQ4ZDk5ZjY3OTk1YWU2OGU5NWRmMjM1NzkwM2MwYjk5MDNhZWE1YWVmNzY1MjgzZDk4OGE1OGE">slack channel</a> to ask questions, discuss ML with other BML community members and suggest the topics of future workshops.</p>
 
 </div>
 </div>
