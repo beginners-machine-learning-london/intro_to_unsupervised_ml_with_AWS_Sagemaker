@@ -62,6 +62,8 @@ This workshop consists of three activities:
 8. Create an AWS Quicksight account
 9. Configure AWS Quicksight using the [my-manifest.json file](https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker/tree/master/exercises/quicksight) to visualise your model output on a map
 
+> **IMPORTANT NOTE**: Make sure to shut down your sagemaker notebook instance after you are done. Otherwise, you will get charged for it per hour. It will not shut down automatically. For training, you will provision a new instance, however that second instance will stop running after the training job is finished. 
+
 ## Featured technologies
 
 - [Python](https://www.python.org/): Python is a programming language that lets you work more quickly and integrate your systems more effectively.
