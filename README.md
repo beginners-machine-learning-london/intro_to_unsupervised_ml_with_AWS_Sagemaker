@@ -53,14 +53,14 @@ This workshop consists of three activities:
 ## Flow
 
 1. Clone this git reposiroty using `git clone https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker`
-2. Set a budget for your AWS account
+2. Create an AWS account and set a budget before doing anything else
 3. Setup up your AWS user accounts and permissions
-4. Create an S3 bucket and uploading the UFO dataset onto your bucket
-5. Create an AWS Sagemaker EC2 instance
-6. Upload the Jupyter notebook file on AWS EC2 instance
+4. Create an S3 bucket and upload the [UFO dataset](https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker/tree/master/exercises/datasets) onto your bucket
+5. Create an AWS Sagemaker notebook instance using the default options. You may need to create an AWS role while creating the instance.
+6. Clone this github repo into AWS Sagemaker's notebook instance
 7. Complete the Jupyter notebook assignments on AWS and save the model outputs in your S3 bucket
 8. Create an AWS Quicksight account
-9. Configure AWS Quicksight to visualise your model output on a map
+9. Configure AWS Quicksight using the [my-manifest.json file](https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker/tree/master/exercises/quicksight) to visualise your model output on a map
 
 ## Featured technologies
 
