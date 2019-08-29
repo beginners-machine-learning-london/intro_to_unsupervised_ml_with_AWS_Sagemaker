@@ -52,9 +52,9 @@ This workshop consists of three activities:
 
 ## Flow
 
-1. Clone this git reposiroty using `git clone https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker`
+1. Clone this git repository using `git clone https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker`
 2. Create an AWS account and set a budget before doing anything else
-3. Setup up your AWS user accounts and permissions
+3. Setup up your AWS user accounts and permissions (IAM User, Roles, Groups and Permissions) - Or use your root account to not deal with permissions. However, this is not AWS best practice.
 4. Create an S3 bucket and upload the [UFO dataset](https://github.com/beginners-machine-learning-london/intro_to_unsupervised_ml_with_AWS_Sagemaker/tree/master/exercises/datasets) onto your bucket
 5. Create an AWS Sagemaker notebook instance using the default options. You may need to create an AWS role while creating the instance.
 6. Clone this github repo into AWS Sagemaker's notebook instance
